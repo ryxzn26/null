@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Touch The Memories</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0f172a;
+      font-family: 'Courier New', monospace;
+      color: #e2e8f0;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .memories {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 20px;
+      margin-bottom: 2rem;
+    }
+
+    .orb {
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #38bdf8 0%, #0f172a 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .orb:hover {
+      transform: scale(1.1);
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      min-height: 30px;
+    }
+
+    #errorScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      color: #ff3c3c;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 999;
+      display: none;
+      animation: glitchFade 0.3s steps(1) infinite;
+    }
+
+    @keyframes glitchFade {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .letter-container {
+      display: none;
+      max-width: 700px;
+      margin-top: 3rem;
+      background: #1e293b;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    #letter {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    #cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #e2e8f0;
+      animation: blink 0.8s steps(1) infinite;
+      margin-left: 3px;
+    }
+
+    @keyframes blink {
+      50% {
+        background-color: transparent;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Touch the Memories</h1>
+  <div class="memories">
+    <div class="orb" onclick="revealMemory(0)">💭</div>
+    <div class="orb" onclick="revealMemory(1)">💭</div>
+    <div class="orb" onclick="revealMemory(2)">💭</div>
+    <div class="orb" onclick="revealMemory(3)">💭</div>
+    <div class="orb" onclick="revealMemory(4)">💭</div>
+    <div class="orb" onclick="revealMemory(5)">💭</div>
+  </div>
+
+  <div class="message" id="messageBox">Click each orb to reveal a memory...</div>
+
+  <div id="errorScreen">
+    <p>SYSTEM ERROR</p>
+    <p>Connection Lost...</p>
+  </div>
+
+  <div class="letter-container" id="letterContainer">
+    <p id="letter"></p>
+    <p style="text-align:right;">— Your forever tech support<span id="cursor"></span></p>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/11/22/audio_2224f2fdfb.mp3?filename=piano-sad-112191.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    const memories = [
+      "Naalala mo nung sabay tayo umuwi at puro kalokohan lang usapan?",
+      "Yung biglaan nating gala na naging core memory?",
+      "Yung times na tahimik lang pero ang gaan?",
+      "Late night chats kahit antok na tayo?",
+      "‘Tara’ moments na walang second thought?",
+      "Yung tinginang alam mo na agad ang ibig sabihin."
+    ];
+
+    let clicked = Array(memories.length).fill(false);
+    let clickCount = 0;
+
+    function revealMemory(index) {
+      if (!clicked[index]) {
+        document.getElementById("messageBox").innerText = memories[index];
+        clicked[index] = true;
+        clickCount++;
+        if (clickCount === memories.length) {
+          triggerError();
+        }
+      }
+    }
+
+    function triggerError() {
+      document.getElementById("messageBox").innerText = "";
+      document.querySelector(".memories").style.display = "none";
+      document.querySelector("h1").innerText = "";
+      document.getElementById("errorScreen").style.display = "flex";
+
+      setTimeout(() => {
+        document.getElementById("errorScreen").style.display = "none";
+        showLetter();
+      }, 3500); // 3.5 seconds fake error
+    }
+
+    function showLetter() {
+      document.getElementById("letterContainer").style.display = "block";
+      document.getElementById("bgMusic").play();
+      typeLetter();
+    }
+
+    const letterText = `
+ang cringe neto pero, before you log out for your month-long mission, I just want to send this final data packet straight to you.
+
+You’ve always been my constant in this chaotic life—my favorite tab that never closes, my stable Wi-Fi signal during the laggy days. paikli na ng paikli ang panahon pero ngayong April 25, you'll be offline from my daily screen, even if it's just temporary. And while I'm happy for you, my system’s been experiencing major emotional glitches thinking about the next update—when you come back,
+
+I’ll already be on a permanent transfer… sa Japan, in short, di ko maprpromise na makakauwi ako as per my mom.
+
+Ang sakit isipin na our “local connection” will be gone, and we won’t be on the same timezone anymore. No more late-night low battery convos, no more quick hangouts, no more spontaneous "tara!" moments. Parang mawawala yung default settings ko—kasi sanay akong may ikaw sa routine ko.
+
+But just like cloud storage, the memories we’ve made are saved—forever. And kahit sa ibang server na ako titira, I'll always keep you in my favorites, bookmarked and backed up. You’ve been such an important part of my life script, and kahit maraming bagong code sa future, you’re one line I’ll never delete.
+
+So before you board that plane, I want to say: thank you. For being the kind of friend that made this version of my life so worth playing.
+
+I hope someday, kahit nasa iba't ibang location tayo, we can reconnect again—same frequency, same warmth, same laugh.
+
+‘Til our next sync, Stephen.
+`;
+
+    let i = 0;
+    function typeLetter() {
+      if (i < letterText.length) {
+        document.getElementById("letter").innerHTML += letterText.charAt(i);
+        i++;
+        setTimeout(typeLetter, 35);
+      }
+    }
+  </script>
+
+</body>
+</html>
